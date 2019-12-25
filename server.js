@@ -8,10 +8,7 @@ var exphbs = require("express-handlebars");
 var app = express();
 var PORT = 3000;
 
-// Non-handlebars version
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-//****************
+//okay, so this mostly works, but it does not render the text. Why?
 
 //handlebars version
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -25,15 +22,15 @@ app.listen(PORT, function() {
 var characters = [
 {
 name: "Twilight Sparkle",
-style: "body {background-color: purple; font-color: black;},",
+style: "body {background-color: purple;}",
 type: "unicorn/alicorn",
-likes: "books, academics"
+likes: "books, academics",
 image:"https://vignette.wikia.nocookie.net/fictionalfighters/images/d/d6/Mordecai-1.png/revision/latest?cb=20150524181704"
 }, 
 {name: "Rarity",
-style: "body {font-color: navy-blue;}",
+style: "p {font-color: navy-blue;}",
 species: "unicorn",
-likes: "fashion, high society"
+likes: "fashion, high society",
 image:"https://vignette.wikia.nocookie.net/theregularshow/images/d/dd/Rigby.png/revision/latest?cb=20190612191840"
 }
 ];
@@ -50,14 +47,14 @@ app.get("/", function(req, res){
 app.get("/:characters?", function(req, res) {
   var chosen = req.params.characters;
 
-  //how about a standardize function.  Standardize removes capitals, removes spaces, and removes
+  //Standardize removes capitals, removes spaces, and removes
   //underscores
   function standardize(input)
   {
   	input = input.toLowerCase();
 
   	//supposed to remove vowels and spaces
-  	input = str.replace(/[\s_]/g, '');
+  	input = input.replace(/[\s_]/g, '');
   	return input;
   }
 
@@ -66,7 +63,7 @@ app.get("/:characters?", function(req, res) {
 	//so this goes through all the characters and checks if there's a match.  If there is,
 	//it renders the character its currenly on.  I need to modify this to also remove spaces
   for (var i = 0; i < characters.length; i++) {
-      if (stardardize(chosen) === standardize(characters[i].name)) {
+      if (standardize(chosen) === standardize(characters[i].name)) {
          
         return res.render("pony", characters[i]);
       }
